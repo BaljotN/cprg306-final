@@ -6,13 +6,13 @@ import { getTopTracks } from "../library/topTracks";
 import { getUserInfo } from "../library/userInfo";
 import { getTopArtists } from "../library/topArtists";
 import { getRandomTracks } from "../library/randomTracks";
-import { createPlaylist } from "../library/createPlaylist"
-import { addTracksToPlaylist } from "../library/addTracks";
 import UserInfo from "../components/userInfo";
 import LoginPage from "../components/Login";
 import TopTracks from "../components/TopTracks"; 
 import TopArtists from "../components/TopArtists";
 import RandomTracks from "../components/RandomTracks";
+import '../styles/main.css';
+
 
 export default function Home() {
   const [topTracks, setTopTracks] = useState([]);
@@ -89,24 +89,6 @@ export default function Home() {
     }
   }, [genre, accessToken]);
 
-  const handleCreatePlaylist = async () => {
-    if (accessToken && userInfo && randomTracks.length > 0) {
-      const trackUris = randomTracks.map(track => track.uri);
-      const playlistName = "Random Songs Playlist";
-
-      try {
-        const newPlaylist = await createPlaylist(accessToken, userInfo.id, playlistName);
-        const playlistId = newPlaylist.id;
-        setPlaylistId(playlistId);
-
-        await addTracksToPlaylist(accessToken, playlistId, trackUris);
-        console.log("Tracks added to the playlist successfully!");
-      } catch (error) {
-        console.error("Error creating playlist and adding tracks:", error);
-      }
-    }
-  };
-
   return (
     <div>
       {!accessToken ? (
@@ -117,8 +99,6 @@ export default function Home() {
           {topTracks && <TopTracks tracks={topTracks} />}
           {topArtists && <TopArtists artists={topArtists} />}
           {randomTracks && <RandomTracks tracks={randomTracks} />}
-          
-          <button onClick={handleCreatePlaylist}>Create Playlist and Add Random Tracks</button>
         </>
       )}
     </div>
